@@ -1,0 +1,10 @@
+{
+  "extends": ["airbnb", "airbnb/hooks"],
+  "rules": {
+    "no-undef": 0,
+    "semi": "error",
+    "quotes": ["error", "single"],
+    "import/prefer-default-export": 0,
+    "react/jsx-props-no-spreading": 0
+  }
+}
