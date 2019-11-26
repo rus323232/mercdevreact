@@ -5,6 +5,7 @@
     "semi": "error",
     "quotes": ["error", "single"],
     "import/prefer-default-export": 0,
-    "react/jsx-props-no-spreading": 0
+    "react/jsx-props-no-spreading": 0,
+    "react/destructuring-assignment": 0
   }
 }

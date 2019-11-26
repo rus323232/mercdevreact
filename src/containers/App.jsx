@@ -1,12 +1,14 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
-import { ThemeProvider } from 'styled-components';
 import { STORE_MODULES } from '../core/constants';
-import theme from '../core/theme';
 
-function App() {
+function App(props) {
+  const store = props[STORE_MODULES.TASKS];
+
+  console.log(store);
+
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <header>
         <h2> header </h2>
       </header>
@@ -16,7 +18,7 @@ function App() {
       <footer>
         <h2> footer </h2>
       </footer>
-    </ThemeProvider>
+    </>
   );
 }
 
