@@ -1,6 +1,11 @@
 import tasks from './tasks';
-import { STORE_MODULES } from '../core/constants';
+import StoreTypes from './store-types';
 
-export default {
-  [STORE_MODULES.TASKS]: tasks.create({}),
+const store = {
+  [StoreTypes.TasksStore]: tasks,
+};
+
+export {
+  store as default,
+  StoreTypes,
 };
