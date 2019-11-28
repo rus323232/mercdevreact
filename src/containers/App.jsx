@@ -2,6 +2,7 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 
 import { StoreTypes } from '../store';
+import TaskInputForm from '../components/TaskInputForm';
 import ContentHolder from '../components/ContentHolder';
 
 function App(props) {
@@ -9,21 +10,7 @@ function App(props) {
 
   return (
     <ContentHolder>
-      <header>
-        <h2>
-          {store.tasksWhichIsDone.map(task => (
-            <div key={task.id}>
-              {task.title}
-            </div>
-          ))}
-        </h2>
-      </header>
-      <main>
-        <h2> main </h2>
-      </main>
-      <footer>
-        <h2> footer </h2>
-      </footer>
+      <TaskInputForm></TaskInputForm>
     </ContentHolder>
   );
 }
