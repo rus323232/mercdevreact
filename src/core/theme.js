@@ -5,10 +5,10 @@ export default {
     accent: '#1976d2',
   },
   font: {
-    family: 'Roboto',
+    family: 'Roboto, Helvetica, Arial, sans-serif',
     size: '16px',
   },
   spacing: {
-    contentSize: '1170px',
+    contentSize: '480px',
   },
 };

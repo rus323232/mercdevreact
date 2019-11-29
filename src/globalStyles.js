@@ -13,4 +13,11 @@ export default createGlobalStyle`
   article {
     box-sizing: border-box;
   }
+  a {
+  input,
+  button,
+    &:focus {
+      outline: 1px ${({ theme }) => theme.colors.accent} dotted;
+    }
+  }
 `;

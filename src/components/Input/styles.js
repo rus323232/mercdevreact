@@ -11,7 +11,4 @@ export const Input = styled.input`
   padding: 10px;
   background: none;
   box-sizing: border-box;
-  &:focus {
-    outline: 1px ${({ theme }) => theme.colors.accent} dotted;
-  }
 `;

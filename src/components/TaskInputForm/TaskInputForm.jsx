@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
-import Input from '../Input';
-import { FormButton, ButtonsHolder } from './styles';
+import Button from '../Button';
+import { ButtonsHolder, TaskInput, TaskForm } from './styles';
 
 export function TaskInputForm({ onSubmit }) {
   const [task, updateTask] = useState('');
@@ -10,29 +10,31 @@ export function TaskInputForm({ onSubmit }) {
     updateTask(event.target.value);
   };
 
-  const onClear = () => {
+  const clearInput = () => {
     updateTask('');
   };
 
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault();
-      if (onSubmit) {
-        onSubmit();
-      }
+
+      if (!onSubmit) return;
+
+      onSubmit(task);
+      clearInput();
     },
-    [onSubmit],
+    [onSubmit, task],
   );
   return (
-    <form onSubmit={handleSubmit}>
+    <TaskForm onSubmit={handleSubmit}>
       <label>
         Задание
-        <Input type="text" value={task} onChange={handleTaskChange} />
+        <TaskInput type="text" required value={task} onChange={handleTaskChange} />
       </label>
       <ButtonsHolder>
-        <FormButton type="submit">Добавить</FormButton>
-        <FormButton type="button" onClick={onClear}>Очистить</FormButton>
+        <Button type="submit">Добавить</Button>
+        <Button type="button" onClick={clearInput}>Очистить</Button>
       </ButtonsHolder>
-    </form>
+    </TaskForm>
   );
 }
