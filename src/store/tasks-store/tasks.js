@@ -1,8 +1,7 @@
 import { types, getRoot, destroy } from 'mobx-state-tree';
 
-import StoreTypes from './store-types';
-import { randomId } from '../core/utils';
-import { FILTERS } from '../core/constants';
+import { randomId } from '../../core/utils';
+import { FILTERS } from '../../core/constants';
 
 const getTaskSchema = () => ({
   id: randomId(),
@@ -11,17 +10,7 @@ const getTaskSchema = () => ({
   date: new Date().toISOString(),
 });
 
-const filterActionsMap = {
-  [FILTERS.SHOW_ALL.id]: () => true,
-  [FILTERS.SHOW_DONE.id]: task => task.isDone,
-  fallback: () => true,
-};
-
-const getFilterAction = id => (
-  filterActionsMap[id] || filterActionsMap.fallback
-);
-
-const initialState = {
+export const initialState = {
   tasks: [
     {
       ...getTaskSchema(),
@@ -35,6 +24,16 @@ const initialState = {
   ],
 };
 
+const filterActionsMap = {
+  [FILTERS.SHOW_ALL.id]: () => true,
+  [FILTERS.SHOW_DONE.id]: task => task.isDone,
+  fallback: () => true,
+};
+
+const getFilterAction = id => (
+  filterActionsMap[id] || filterActionsMap.fallback
+);
+
 const TaskModel = types.model('TaskModel', {
   id: types.string,
   date: types.string,
@@ -45,11 +44,11 @@ const TaskModel = types.model('TaskModel', {
     self.isDone = !self.isDone;
   },
   remove() {
-    getRoot(self).removeTask(self);
+    getRoot(self).tasksStore.removeTask(self);
   },
 }));
 
-const TasksStore = types.model(StoreTypes.TasksStore, {
+const TasksListModel = types.model('TasksListModel', {
   tasks: types.optional(types.array(TaskModel), []),
   checkedFilterId: types.optional(types.string, ''),
 })
@@ -75,4 +74,4 @@ const TasksStore = types.model(StoreTypes.TasksStore, {
     },
   }));
 
-export default TasksStore.create(initialState);
+export default TasksListModel;

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-import Button from '../Button';
+import Button from '../button';
 import { ButtonsHolder, TaskInput, TaskForm } from './styles';
 
 export function TaskInputForm({ onSubmit }) {

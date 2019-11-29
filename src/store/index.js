@@ -1,11 +1,8 @@
-import tasks from './tasks';
-import StoreTypes from './store-types';
-
-const store = {
-  [StoreTypes.TasksStore]: tasks,
-};
+import RootStore from './root-store';
+import { StoreContext, StoreProvider } from './context';
 
 export {
-  store as default,
-  StoreTypes,
+  StoreContext,
+  StoreProvider,
+  RootStore as default,
 };
