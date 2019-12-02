@@ -1,9 +1,12 @@
 import {
+  flow,
   types,
   destroy,
   getParent,
+  applySnapshot,
 } from 'mobx-state-tree';
 
+import { tasksApi } from '../../services';
 import { randomId } from '../../core/utils';
 import { FILTERS } from '../../core/constants';
 
@@ -27,6 +30,11 @@ export const initialState = {
     },
   ],
 };
+
+const mapTasksTitles = dataWithTitles => dataWithTitles.map(({ shortText = '' }) => ({
+  ...getTaskSchema(),
+  title: shortText,
+}));
 
 const filterActionsMap = {
   [FILTERS.SHOW_ALL.id]: () => true,
@@ -76,6 +84,13 @@ const TasksListModel = types.model('TasksListModel', {
   checkedFilterId: types.optional(types.string, ''),
 })
   .actions(self => ({
+    loadTasks: flow(function* loadTasks() {
+      const response = yield tasksApi.getTasksTitles();
+
+      if (Array.isArray(response) && response.length) {
+        applySnapshot(self.tasks, mapTasksTitles(response));
+      }
+    }),
     addTask(title) {
       self.tasks.push({
         ...getTaskSchema(),

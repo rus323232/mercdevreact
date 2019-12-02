@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
+import React, { useContext, useEffect } from 'react';
 
 import { StoreContext } from '../store';
 import Filter from '../components/filter';
@@ -13,12 +13,17 @@ const filterItems = Object.values(FILTERS);
 function App() {
   const { tasksStore } = useContext(StoreContext);
   const {
-    addTask,
-    selectFilter,
-    selectedTask,
     checkedFilterId,
     getFilteredTasks,
+    addTask,
+    loadTasks,
+    selectFilter,
+    selectedTask,
   } = tasksStore;
+
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
 
   const handleFormSubmit = (value) => {
     addTask(value);
