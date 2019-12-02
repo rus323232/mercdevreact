@@ -1,5 +1,7 @@
 import {
-  types, getRoot, destroy,
+  types,
+  destroy,
+  getParent,
 } from 'mobx-state-tree';
 
 import { randomId } from '../../core/utils';
@@ -37,7 +39,7 @@ const getFilterAction = id => (
 );
 
 const TaskModel = types.model('TaskModel', {
-  id: types.string,
+  id: types.identifier,
   date: types.string,
   title: types.string,
   isDone: types.optional(types.boolean, false),
@@ -45,18 +47,32 @@ const TaskModel = types.model('TaskModel', {
   toggle() {
     self.isDone = !self.isDone;
   },
+  pin() {
+    getParent(self, 2).pinTask(self);
+  },
+  unpin() {
+    getParent(self, 2).unpinTask();
+  },
   remove() {
-    /**
-     * Немного не понял как доставать инстанс родительского стора в таких случаях ?
-     * можно конечно еще таким образом getParent(getParent(self)) но мне тоже какжется я что-то
-     * не так делаю
-     */
-    getRoot(self).tasksStore.removeTask(self);
+    getParent(self, 2).removeTask(self);
+  },
+})).views(self => ({
+  get isTaskPinned() {
+    const { selectedTask } = getParent(self, 2);
+
+    if (!selectedTask) {
+      return false;
+    }
+
+    return self.id === selectedTask.id;
   },
 }));
 
 const TasksListModel = types.model('TasksListModel', {
   tasks: types.optional(types.array(TaskModel), []),
+  selectedTask: types.maybeNull(
+    types.reference(types.late(() => TaskModel)),
+  ),
   checkedFilterId: types.optional(types.string, ''),
 })
   .actions(self => ({
@@ -67,7 +83,14 @@ const TasksListModel = types.model('TasksListModel', {
       });
     },
     removeTask(task) {
+      self.unpinTask();
       destroy(task);
+    },
+    pinTask({ id }) {
+      self.selectedTask = id;
+    },
+    unpinTask() {
+      self.selectedTask = null;
     },
     selectFilter({ id = '' }) {
       self.checkedFilterId = id;

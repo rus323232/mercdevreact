@@ -11,7 +11,14 @@ import {
 
 function TodoListView({ tasks }) {
   const renderListItems = () => tasks.map(({
-    id, title, isDone, remove, toggle,
+    id,
+    title,
+    isDone,
+    isTaskPinned,
+    pin,
+    unpin,
+    remove,
+    toggle,
   }) => (
     <ListItem key={id}>
       <label>
@@ -23,6 +30,9 @@ function TodoListView({ tasks }) {
         <ListItemTitle isDone={isDone}>{title}</ListItemTitle>
       </label>
       <Button onClick={remove}>Удалить</Button>
+      {isTaskPinned
+        ? <Button onClick={unpin}>Открепить</Button>
+        : <Button onClick={pin}>Закрепить</Button>}
     </ListItem>
   ));
 

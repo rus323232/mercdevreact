@@ -15,6 +15,7 @@ function App() {
   const {
     addTask,
     selectFilter,
+    selectedTask,
     checkedFilterId,
     getFilteredTasks,
   } = tasksStore;
@@ -23,10 +24,16 @@ function App() {
     addTask(value);
   };
 
+  const pinnedTaskTitle = selectedTask ? selectedTask.title : 'Нет закрепленных задач';
+
   return (
     <ContentHolder centered fullHeight>
       <TaskInputForm onSubmit={handleFormSubmit} />
       <Filter items={filterItems} checkedItemId={checkedFilterId} onChange={selectFilter} />
+      <h2>Закрепленная задача</h2>
+      <div>
+        {pinnedTaskTitle}
+      </div>
       <TodoList tasks={getFilteredTasks} />
     </ContentHolder>
   );
