@@ -28,9 +28,9 @@ if (process.env.NODE_ENV === 'development') {
   switchOnDebugTools();
 }
 
-const arrayOfRoutes = Object.values(routes);
+const routesList = Object.values(routes);
 
-const renderRoutes = arrayOfRoutes.map(({
+const renderRoutes = routesList.map(({
   path,
   component: Component,
   exact = false,
@@ -52,7 +52,8 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       <Router>
-        <MainNavigation routes={arrayOfRoutes} />
+        <MainNavigation routes={routesList} />
+        <MainNavigation routes={routes.about.routes} />
         <Switch>
           {renderRoutes}
         </Switch>
