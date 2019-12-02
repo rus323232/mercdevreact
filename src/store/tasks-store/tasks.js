@@ -1,4 +1,6 @@
-import { types, getRoot, destroy } from 'mobx-state-tree';
+import {
+  types, getRoot, destroy,
+} from 'mobx-state-tree';
 
 import { randomId } from '../../core/utils';
 import { FILTERS } from '../../core/constants';
@@ -44,6 +46,11 @@ const TaskModel = types.model('TaskModel', {
     self.isDone = !self.isDone;
   },
   remove() {
+    /**
+     * Немного не понял как доставать инстанс родительского стора в таких случаях ?
+     * можно конечно еще таким образом getParent(getParent(self)) но мне тоже какжется я что-то
+     * не так делаю
+     */
     getRoot(self).tasksStore.removeTask(self);
   },
 }));
