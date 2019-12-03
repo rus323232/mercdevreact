@@ -9,18 +9,19 @@ import {
   ListItemTitle,
 } from './styles';
 
-function TodoListView({ tasks }) {
-  const renderListItems = () => tasks.map(({
-    id,
+const TodoListItem = observer(({ listItemData }) => {
+  const {
     title,
     isDone,
+    toggle,
     isTaskPinned,
     pin,
     unpin,
     remove,
-    toggle,
-  }) => (
-    <ListItem key={id}>
+  } = listItemData;
+
+  return (
+    <ListItem>
       <label>
         <input
           type="checkbox"
@@ -34,8 +35,10 @@ function TodoListView({ tasks }) {
         ? <Button onClick={unpin}>Открепить</Button>
         : <Button onClick={pin}>Закрепить</Button>}
     </ListItem>
-  ));
+  );
+});
 
+function TodoListView({ tasks }) {
   const isTasksListEmpty = tasks.length === 0;
 
   return (
@@ -44,7 +47,9 @@ function TodoListView({ tasks }) {
         ? 'Список заданий пуст'
         : (
           <List>
-            {renderListItems()}
+            {tasks.map(listItemData => (
+              <TodoListItem key={listItemData.id} listItemData={listItemData} />
+            ))}
           </List>
         )}
     </Container>
