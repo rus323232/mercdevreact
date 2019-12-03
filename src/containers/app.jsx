@@ -10,6 +10,10 @@ import TaskInputForm from '../components/task-input-form';
 
 const filterItems = Object.values(FILTERS);
 
+/**
+ * Придумал только такое решение, но тут у меня есть вопросы как лучше организовывать коннект
+ * со стором. Лучше наверное словами проговорить и созвониться как будет время
+ * */
 const PinnedTaskTitle = observer(() => {
   const {
     tasksStore: { selectedTask },
