@@ -1,9 +1,12 @@
 import {
+  flow,
   types,
   destroy,
-  getParent,
+  getRoot,
+  applySnapshot,
 } from 'mobx-state-tree';
 
+import { tasksApi } from '../../services';
 import { randomId } from '../../core/utils';
 import { FILTERS } from '../../core/constants';
 
@@ -28,6 +31,11 @@ export const initialState = {
   ],
 };
 
+const mapTasksTitles = dataWithTitles => dataWithTitles.map(({ shortText = '' }) => ({
+  ...getTaskSchema(),
+  title: shortText,
+}));
+
 const filterActionsMap = {
   [FILTERS.SHOW_ALL.id]: () => true,
   [FILTERS.SHOW_DONE.id]: task => task.isDone,
@@ -43,30 +51,47 @@ const TaskModel = types.model('TaskModel', {
   date: types.string,
   title: types.string,
   isDone: types.optional(types.boolean, false),
-}).actions(self => ({
-  toggle() {
-    self.isDone = !self.isDone;
-  },
-  pin() {
-    getParent(self, 2).pinTask(self);
-  },
-  unpin() {
-    getParent(self, 2).unpinTask();
-  },
-  remove() {
-    getParent(self, 2).removeTask(self);
-  },
-})).views(self => ({
-  get isTaskPinned() {
-    const { selectedTask } = getParent(self, 2);
+}).actions((self) => {
+  /**
+   * Не понял как лучше добираться до родителькой модели
+   * Официальный туториал говорит делать так getParent(self, 2)
+   * но этот вариант выглядит убого. Из всего что нашел это
+   * getRoot(self) и вниз по дереву моделей и тупо заменить
+   * getParent(self, 2) на getParent(getParent(self))
+   * Можно еще отказаться от методов в самой итерируемой модели
+   * и определить все в родителе, но это тоже я так понимаю не лучший подход
+   * */
+  const parentModel = getRoot(self).tasksStore;
 
-    if (!selectedTask) {
-      return false;
-    }
+  return ({
+    toggle() {
+      self.isDone = !self.isDone;
+    },
+    pin() {
+      parentModel.pinTask(self);
+    },
+    unpin() {
+      parentModel.unpinTask();
+    },
+    remove() {
+      parentModel.removeTask(self);
+    },
+  });
+}).views((self) => {
+  const parentModel = getRoot(self).tasksStore;
 
-    return self.id === selectedTask.id;
-  },
-}));
+  return ({
+    get isTaskPinned() {
+      const { selectedTask } = parentModel;
+
+      if (!selectedTask) {
+        return false;
+      }
+
+      return self.id === selectedTask.id;
+    },
+  });
+});
 
 const TasksListModel = types.model('TasksListModel', {
   tasks: types.optional(types.array(TaskModel), []),
@@ -76,6 +101,13 @@ const TasksListModel = types.model('TasksListModel', {
   checkedFilterId: types.optional(types.string, ''),
 })
   .actions(self => ({
+    loadTasks: flow(function* loadTasks() {
+      const response = yield tasksApi.getTasksTitles();
+
+      if (Array.isArray(response) && response.length) {
+        applySnapshot(self.tasks, mapTasksTitles(response));
+      }
+    }),
     addTask(title) {
       self.tasks.push({
         ...getTaskSchema(),
