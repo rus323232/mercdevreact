@@ -1,22 +1,23 @@
-import React from 'react';
-import { observer, inject } from 'mobx-react';
+import React, { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
 
-import { StoreTypes } from '../store';
-import Filter from '../components/Filter';
+import { StoreContext } from '../store';
+import Filter from '../components/filter';
 import { FILTERS } from '../core/constants';
-import TodoList from '../components/TodoList';
-import ContentHolder from '../components/ContentHolder';
-import TaskInputForm from '../components/TaskInputForm';
+import TodoList from '../components/todo-list';
+import ContentHolder from '../components/content-holder';
+import TaskInputForm from '../components/task-input-form';
 
 const filterItems = Object.values(FILTERS);
 
-function App(props) {
+function App() {
+  const { tasksStore } = useContext(StoreContext);
   const {
     addTask,
     selectFilter,
     checkedFilterId,
     getFilteredTasks,
-  } = props[StoreTypes.TasksStore];
+  } = tasksStore;
 
   const handleFormSubmit = (value) => {
     addTask(value);
@@ -31,4 +32,4 @@ function App(props) {
   );
 }
 
-export default inject(StoreTypes.TasksStore)(observer(App));
+export default observer(App);

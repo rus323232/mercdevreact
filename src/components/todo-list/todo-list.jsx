@@ -1,7 +1,7 @@
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import Button from '../Button';
+import Button from '../button';
 import {
   List,
   ListItem,
