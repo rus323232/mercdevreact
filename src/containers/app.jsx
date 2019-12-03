@@ -1,5 +1,5 @@
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect } from 'react';
 
 import { StoreContext } from '../store';
 import Filter from '../components/filter';
@@ -10,10 +10,6 @@ import TaskInputForm from '../components/task-input-form';
 
 const filterItems = Object.values(FILTERS);
 
-/**
- * Придумал только такое решение, но тут у меня есть вопросы как лучше организовывать коннект
- * со стором. Лучше наверное словами проговорить и созвониться как будет время
- * */
 const PinnedTaskTitle = observer(() => {
   const {
     tasksStore: { selectedTask },
@@ -35,15 +31,10 @@ function App() {
   const { tasksStore } = useContext(StoreContext);
   const {
     addTask,
-    loadTasks,
     selectFilter,
     checkedFilterId,
     getFilteredTasks,
   } = tasksStore;
-
-  useEffect(() => {
-    loadTasks();
-  }, [loadTasks]);
 
   const handleFormSubmit = (value) => {
     addTask(value);
