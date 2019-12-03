@@ -10,6 +10,23 @@ import TaskInputForm from '../components/task-input-form';
 
 const filterItems = Object.values(FILTERS);
 
+const PinnedTaskTitle = observer(() => {
+  const {
+    tasksStore: { selectedTask },
+  } = useContext(StoreContext);
+
+  const pinnedTaskTitle = selectedTask ? selectedTask.title : 'Нет закрепленных задач';
+
+  return (
+    <>
+      <h2>Закрепленная задача</h2>
+      <div>
+        {pinnedTaskTitle}
+      </div>
+    </>
+  );
+});
+
 function App() {
   const { tasksStore } = useContext(StoreContext);
   const {
@@ -27,6 +44,7 @@ function App() {
     <ContentHolder centered fullHeight>
       <TaskInputForm onSubmit={handleFormSubmit} />
       <Filter items={filterItems} checkedItemId={checkedFilterId} onChange={selectFilter} />
+      <PinnedTaskTitle />
       <TodoList tasks={getFilteredTasks} />
     </ContentHolder>
   );
